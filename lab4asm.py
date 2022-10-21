@@ -87,7 +87,7 @@ def encode(opcode, argv, argc):
   if len(mach) < 16:
     mach += "0"*(16-len(mach))
 
-  return mach
+  return mach + ";"
 
 def assemble_op(parts):
   opcode = parts[0].upper()
@@ -175,7 +175,7 @@ def assemble(width, depth, inFile, outFile):
         raise(ex)
         return
 
-  outFile.write("  [{}..{}] : 0000000000000000\n".format(outAddr, depth-1))
+  outFile.write("  [{}..{}] : 0000000000000000;\n".format(outAddr, depth-1))
   outFile.write("END;")
 
   print("  Read {} lines".format(lineNo))
