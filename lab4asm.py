@@ -25,20 +25,20 @@ def encode_reg(arg):
   return format(ord(arg) - ord("A"), "04b")
 
 
-def encode_label(arg):
+def encode_label(arg, width):
   global PC, labels
   offset = labels[arg] - PC
   print("Jump offset: {}".format(offset))
   # TODO: Fix jump calculation for negative jumps
   if offset < 0:
     offset += 15
-  return format(offset, "04b")
+  return format(offset, "0{}b".format(width))
 
 
 def encode_arg(opcode, arg):
   WIDTH = {
-    "LDI": 8,
-    "ADI": 4
+    "ADI": 4,
+    "CMPJ": 4
   }
   if opcode in WIDTH:
     width = WIDTH[opcode]
@@ -53,7 +53,7 @@ def encode_arg(opcode, arg):
   elif arg.upper() in "ABCDEFGHIJKLMNOP":
     return encode_reg(arg.upper())
   else:
-    return encode_label(arg)
+    return encode_label(arg, width)
 
 
 def encode(opcode, argv, argc):
