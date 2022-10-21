@@ -21,7 +21,7 @@ Example program (`lab4.asm`):
 loop:
   CMPJ B A 2   ; continue looping while B >= A
   JMP end      ; escape loop if CMPJ failed
-  ADI A 1 A    ; increment A
+  INC A A      ; increment A
   JMP loop
 	
 end:
@@ -46,7 +46,7 @@ CONTENT BEGIN
   1 : 0001000000110001;
   2 : 1110000100000010;
   3 : 1101000001100000;
-  4 : 0011000000010000;
+  4 : 0111000000000000;
   5 : 1101000000100000;
   6 : 0000000000000000;
   [7..255] : 0000000000000000;
