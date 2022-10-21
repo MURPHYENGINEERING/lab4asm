@@ -15,8 +15,8 @@ Example program (`lab4.asm`):
   ; - named registers
   ; - jump to labels
 
-  LDI 1 A      ; counter in register A
-  LDI 3 B      ; limit in register B
+  LDI 0b1 A    ; counter in register A
+  LDI 0x3 B    ; limit in register B
   
 loop:
   CMPJ B A 2   ; continue looping while B >= A
