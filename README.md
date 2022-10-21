@@ -1,11 +1,11 @@
 # lab4asm
 Usage:
 
-  `lab4asm input_file [output_file]`
+  `python3 lab4asm.py [input_file] [output_file]`
 
 If you don't specify `output_file` then it will use the name of the input file and add the extension `.mif`. If you don't specify filenames then it will use `lab4.asm` and output to `lab4.mif`.
 
-Example program:
+Example program (`lab4.asm`)
 ```
   ; Demonstrated here:
   ; - comments
@@ -26,7 +26,7 @@ end:
   HALT
 ```
 
-Resulting Memory Initialization File:
+Resulting Memory Initialization File (`lab4.mif`):
 ```
 -- Intel Memory Initialization File
 
@@ -40,12 +40,12 @@ ADDRESS_RADIX=UNS;
 DATA_RADIX=BIN;
 
 CONTENT BEGIN
-  0 : 0001000000010000
-  1 : 0001000001000001
-  2 : 0011000000110000
-  3 : 1110000100000010
-  4 : 1111000000000000
-  5 : 0000000000000000
-  [6..255] : 0000000000000000
+  0 : 0001000000010000;
+  1 : 0001000001000001;
+  2 : 0011000000110000;
+  3 : 1110000100000010;
+  4 : 1111000000000000;
+  5 : 0000000000000000;
+  [6..255] : 0000000000000000;
 END;
 ```
