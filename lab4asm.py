@@ -50,8 +50,8 @@ def encode_arg(opcode, arg):
     return encode_bin(arg, width)
   elif arg.isnumeric():
     return encode_dec(arg, width)
-  elif arg in "ABCDEFGHIJKLMNOP":
-    return encode_reg(arg)
+  elif arg.upper() in "ABCDEFGHIJKLMNOP":
+    return encode_reg(arg.upper())
   else:
     return encode_label(arg)
 
