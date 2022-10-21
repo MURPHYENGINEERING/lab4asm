@@ -7,7 +7,7 @@ Usage:
 
 If you don't specify `output_file` then it will use the name of the input file and add the extension `.mif`. If you don't specify filenames then it will use `lab4.asm` and output to `lab4.mif`.
 
-Example program (`lab4.asm`)
+Example program (`lab4.asm`):
 ```
   ; Demonstrated here:
   ; - comments
