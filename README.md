@@ -1,4 +1,6 @@
 # lab4asm
+Assembly language for an FPGA-based processor built for Lab 4 in EEE333
+
 Usage:
 
   `python3 lab4asm.py [input_file] [output_file]`
