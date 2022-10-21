@@ -83,8 +83,13 @@ def encode(opcode, argv, argc):
       .format(opcode, len(argv), argc)
     )
   mach = OPCODES[opcode]
-  for arg in argv:
-    mach += encode_arg(opcode, arg)
+  if opcode == "INC" or opcode == "DEC":
+    mach += encode_arg(opcode, argv[0])
+    mach += "0000"
+    mach += encode_arg(opcode, argv[1])
+  else:
+    for arg in argv:
+      mach += encode_arg(opcode, arg)
 
   if len(mach) < 16:
     mach += "0"*(16-len(mach))
