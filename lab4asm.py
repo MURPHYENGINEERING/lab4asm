@@ -25,10 +25,12 @@ def encode_reg(arg):
   return format(ord(arg) - ord("A"), "04b")
 
 
-def encode_label(arg, width):
+def encode_label(arg, width, direct):
   global PC, labels
-  offset = labels[arg] - PC
-  print("Jump offset: {}".format(offset))
+  if direct:
+    offset = labels[arg]
+  else:
+    offset = labels[arg] - PC
   # TODO: Fix jump calculation for negative jumps
   if offset < 0:
     offset += 15
@@ -48,12 +50,12 @@ def encode_arg(opcode, arg):
     return encode_hex(arg, width)
   elif arg.startswith("0b"):
     return encode_bin(arg, width)
-  elif arg.isnumeric():
+  elif arg.isnumeric(): 
     return encode_dec(arg, width)
   elif arg.upper() in "ABCDEFGHIJKLMNOP":
     return encode_reg(arg.upper())
   else:
-    return encode_label(arg, width)
+    return encode_label(arg, width, (opcode == "JMP"))
 
 
 def encode(opcode, argv, argc):
@@ -178,7 +180,7 @@ def assemble(width, depth, inFile, outFile):
   outFile.write("  [{}..{}] : 0000000000000000;\n".format(outAddr, depth-1))
   outFile.write("END;")
 
-  print("  Read {} lines".format(lineNo))
+  print("\nRead {} lines".format(lineNo))
 
 
 def main():

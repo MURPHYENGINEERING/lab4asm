@@ -14,18 +14,18 @@ Example program (`lab4.asm`):
   ; - binary, hex, and decimal literals
   ; - named registers
   ; - jump to labels
-  ; Unfortunately negative jumps are not possible because
-  ; RD is only 4 bits wide, but PC is 8 bits, so we can't overflow it.
-  ; So our machine doesn't support loops :(
 
-  LDI  0b1  A    ; put 1 into count register A
-  LDI  0x04 B    ; put 4 into limit register B
-
-  ADI   A 3 A    ; Add to counter
-  CMPJ  B A end  ; skip the next instruction if B >= A
-  NOP
+	LDI 1 A			; counter in register A
+	LDI 3 B			; limit in register B
+  
+loop:
+	CMPJ B A 2		; continue looping while B >= A
+	JMP end			  ; escape loop if CMPJ failed
+	ADI A 1 A		  ; increment A
+	JMP loop
+	
 end:
-  HALT
+	HALT
 ```
 
 Resulting Memory Initialization File (`lab4.mif`):
@@ -43,11 +43,12 @@ DATA_RADIX=BIN;
 
 CONTENT BEGIN
   0 : 0001000000010000;
-  1 : 0001000001000001;
-  2 : 0011000000110000;
-  3 : 1110000100000010;
-  4 : 1111000000000000;
-  5 : 0000000000000000;
-  [6..255] : 0000000000000000;
+  1 : 0001000000110001;
+  2 : 1110000100000010;
+  3 : 1101000001100000;
+  4 : 0011000000010000;
+  5 : 1101000000100000;
+  6 : 0000000000000000;
+  [7..255] : 0000000000000000;
 END;
 ```
