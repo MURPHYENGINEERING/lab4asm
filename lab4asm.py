@@ -42,6 +42,8 @@ def encode_label(arg, width, direct):
   if direct:
     offset = labels[arg]
   else:
+    if PC > labels[arg]:
+      raise Exception("Negative relative jumps are not supported by the hardware")
     offset = labels[arg] - PC
   # TODO: Fix jump calculation for negative jumps
   if offset < 0:
@@ -202,8 +204,8 @@ def assemble(width, depth, inFile, outFile):
             outAddr += 1
           PC += 1
       except Exception as ex:
-        print("! {} at line {}".format(ex, lineNo))
-        raise(ex)
+        print("! {} (line {}: {})".format(ex, lineNo, line))
+        #raise(ex)
         return
 
   outFile.write("  [{}..{}] : 0000000000000000;\n".format(outAddr, depth-1))
