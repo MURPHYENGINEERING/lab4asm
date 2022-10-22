@@ -38,18 +38,14 @@ static void strip_file_extension(char* fname)
   char* end = fname + strlen(fname);
 
   while (end > fname && *end != '.')
-  {
     --end;
-  }
 
   if (end > fname)
-  {
     *end = '\0';
-  }
 }
 
 
-char* strip_whitespace(char* str)
+static char* strip_whitespace(char* str)
 {
   char* end;
 
@@ -80,6 +76,13 @@ static void strip_comments(char* str)
 }
 
 
+static void expected(char const* msg)
+{
+  printf("\n\n! Expected %s at line %lu\n\n", msg, iInputLine);
+  exit(1);
+}
+
+
 static void emit_header(FILE* f)
 {
   fprintf(f,
@@ -105,6 +108,9 @@ static bool find_label(char* line, bool notify)
   if (line[end] == ':')
   {
     line[end] = '\0';
+    if (strlen(line) == 0)
+      expected("label declaration");
+
     strlcpy(labels[nLabels].name, line, LABEL_MAX_LEN);
     labels[nLabels].addr = curAddr;
     if (notify)
@@ -181,6 +187,9 @@ static void emit_arg_ex(FILE* of, char const* arg, size_t width)
 static void emit_arg(FILE* of, size_t width)
 {
   char* arg = strtok(NULL, DELIM);
+  if (arg == NULL)
+    expected("argument");
+
   emit_arg_ex(of, arg, width);
 }
 
@@ -212,7 +221,9 @@ static void emit_zero(FILE* of, size_t width)
 static void emit_absolute_label(FILE* of, size_t width)
 {
   char* arg = strtok(NULL, DELIM);
-
+  if (arg == NULL)
+    expected("label or absolute jump address");
+  
   if (isalpha(*arg)) {
     for (size_t i = 0; i < nLabels; ++i) {
       Label* label = &labels[i];
@@ -221,6 +232,9 @@ static void emit_absolute_label(FILE* of, size_t width)
         return;
       }
     }
+    char buf[128];
+    snprintf(buf, sizeof(buf)-1, "label ('%s' does not exist)", arg);
+    expected(buf);
   }
   else {
     emit_arg_ex(of, arg, width);
@@ -231,7 +245,9 @@ static void emit_absolute_label(FILE* of, size_t width)
 static void emit_relative_label(FILE* of, size_t width)
 {
   char* arg = strtok(NULL, DELIM);
-
+  if (arg == NULL)
+    expected("label or relative jump address");
+  
   if (isalpha(*arg)) {
     for (size_t i = 0; i < nLabels; ++i) {
       Label* label = &labels[i];
@@ -241,6 +257,9 @@ static void emit_relative_label(FILE* of, size_t width)
         return;
       }
     }
+    char buf[128];
+    snprintf(buf, sizeof(buf)-1, "label ('%s' does not exist)", arg);
+    expected(buf);
   }
   else {
     emit_arg_ex(of, arg, width);
@@ -261,6 +280,10 @@ static void translate_line(char* line, FILE* of)
   printf(buf, line);
 
   char* tok = strtok(line, DELIM);
+
+  if (tok == NULL) {
+    expected("opcode");
+  }
 
   char* opcode = tok;
 
@@ -335,6 +358,11 @@ static void translate_line(char* line, FILE* of)
   else if (isop(opcode, "HALT")) {
     emit_opcode(of, "0000");
     emit_zero(of, 12);
+  }
+  else {
+    char buf[128];
+    snprintf(buf, sizeof(buf) - 1, "opcode ('%s' is not valid)", opcode);
+    expected(buf);
   }
 
   fprintf(of, ";\n");
