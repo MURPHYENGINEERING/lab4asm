@@ -243,18 +243,6 @@ static void emit_label_ref(FILE* of, size_t width, bool relative)
 }
 
 
-static void emit_absolute_label(FILE* of, size_t width)
-{
-  emit_label_ref(of, width, false);
-}
-
-
-static void emit_relative_label(FILE* of, size_t width)
-{
-  emit_label_ref(of, width, true);
-}
-
-
 static bool isop(char const* search, char const* match)
 {
   return strcasecmp(search, match) == 0;
@@ -331,13 +319,13 @@ static void translate_line(char* line, FILE* of)
   }
   else if (isop(opcode, "JMP")) {
     emit_opcode(of, "1101");
-    emit_absolute_label(of, 8);
+    emit_label_ref(of, 8, false);
     emit_zero(of, 4);
   }
   else if (isop(opcode, "CMPJ")) {
     emit_opcode(of, "1110");
     emit_binary(of);
-    emit_relative_label(of, 4);
+    emit_label_ref(of, 4, true);
   }
   else if (isop(opcode, "NOP")) {
     emit_opcode(of, "1111");
