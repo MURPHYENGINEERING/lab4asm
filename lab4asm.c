@@ -218,17 +218,18 @@ static void emit_zero(FILE* of, size_t width)
 }
 
 
-static void emit_absolute_label(FILE* of, size_t width)
+static void emit_label_ref(FILE* of, size_t width, bool relative)
 {
   char* arg = strtok(NULL, DELIM);
   if (arg == NULL)
-    expected("label or absolute jump address");
+    expected("label or jump address");
   
   if (isalpha(*arg)) {
     for (size_t i = 0; i < nLabels; ++i) {
       Label* label = &labels[i];
       if (strcasecmp(label->name, arg) == 0) {
-        emit_bits(of, label->addr, width);
+        size_t offset = relative ? label->addr - curAddr : label->addr;
+        emit_bits(of, offset, width);
         return;
       }
     }
@@ -242,28 +243,15 @@ static void emit_absolute_label(FILE* of, size_t width)
 }
 
 
+static void emit_absolute_label(FILE* of, size_t width)
+{
+  emit_label_ref(of, width, false);
+}
+
+
 static void emit_relative_label(FILE* of, size_t width)
 {
-  char* arg = strtok(NULL, DELIM);
-  if (arg == NULL)
-    expected("label or relative jump address");
-  
-  if (isalpha(*arg)) {
-    for (size_t i = 0; i < nLabels; ++i) {
-      Label* label = &labels[i];
-      if (strcasecmp(label->name, arg) == 0) {
-        size_t offset = label->addr - curAddr;
-        emit_bits(of, offset, width);
-        return;
-      }
-    }
-    char buf[128];
-    snprintf(buf, sizeof(buf)-1, "label ('%s' does not exist)", arg);
-    expected(buf);
-  }
-  else {
-    emit_arg_ex(of, arg, width);
-  }
+  emit_label_ref(of, width, true);
 }
 
 
