@@ -11,19 +11,20 @@ Example program (`lab4.asm`):
 ```
   ; Demonstrated here:
   ; - comments
+  ; - case insensitivity
   ; - binary, hex, and decimal literals
   ; - named registers
   ; - jump to labels
 
-  LDI 0b1 A    ; counter in register A
-  LDI 0x3 B    ; limit in register B
-  
-loop:
-  CMPJ B A 2   ; continue looping while B >= A
-  JMP end      ; escape loop if CMPJ failed
-  INC A A      ; increment A
+  ldi 0b1 a     ; counter in register A
+  LDI 0x2 B     ; limit in register B
+
+LOOP:
+  CMPJ B A 2    ; continue looping while B >= A
+  JMP end       ; escape loop if CMPJ failed
+  INC A A       ; increment A
   JMP loop
-	
+
 end:
   HALT
 ```
